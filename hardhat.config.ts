@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
     },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
-      accounts: []
+      accounts: [process.env.PRIVATE_KEY || ""]
     },
     mainnet: {
       url: "",
