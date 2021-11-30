@@ -68,5 +68,41 @@ contract Market is ReentrancyGuard {
             payable(address(0)),
             false
         );
+
+        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+
+        emit MarketTokenMinted(
+            itemId,
+            nftContract,
+            tokenId,
+            msg.sender,
+            address(0),
+            price,
+            false
+        );
+    }
+
+    function createMarketSale(address nftContract, uint256 itemId)
+        public
+        payable
+        nonReentrant
+    {
+        uint256 price = idToMarketToken[itemId].price;
+        uint256 tokenId = idToMarketToken[itemId].tokenId;
+
+        require(
+            price == msg.value,
+            "Please submit the asking price in order to continue"
+        );
+
+        idToMarketToken[itemId].seller.transfer(msg.value);
+
+        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+
+        idToMarketToken[itemId].owner = payable(msg.sender);
+        idToMarketToken[itemId].sold = true;
+
+        _tokensSold.increment();
+        payable(owner).transfer(listingPrice);
     }
 }
