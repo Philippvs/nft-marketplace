@@ -45,7 +45,7 @@ contract Market is ReentrancyGuard {
         return listingPrice;
     }
 
-    function mintMarketItem(
+    function makeMarketItem(
         uint256 price,
         address nftContract,
         uint256 tokenId
@@ -104,5 +104,47 @@ contract Market is ReentrancyGuard {
 
         _tokensSold.increment();
         payable(owner).transfer(listingPrice);
+    }
+
+    function fetchMarketToken() public view returns (MarketToken[] memory) {
+        uint256 itemCount = _tokenIds.current();
+        uint256 unsoldItemCount = itemCount - _tokensSold.current();
+        uint256 currentIndex = 0;
+
+        MarketToken[] memory items = new MarketToken[](unsoldItemCount);
+
+        for (uint256 i = 0; i < itemCount; i++) {
+            if (idToMarketToken[i + 1].owner == address(0)) {
+                MarketToken storage currentItem = idToMarketToken[i + 1];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    function fetchPersonalToken() public view returns (MarketToken[] memory) {
+        uint256 itemCount = _tokenIds.current();
+
+        MarketToken[] memory items;
+
+        for (uint256 i = 0; i < itemCount; i++) {
+            if (idToMarketToken[i + 1].owner == msg.sender) {
+                items[i] = idToMarketToken[i + 1];
+            }
+        }
+        return items;
+    }
+
+    function fetchMintedNfts() public view returns (MarketToken[] memory) {
+        uint256 itemCount = _tokenIds.current();
+
+        MarketToken[] memory items;
+        for (uint256 i = 0; i < itemCount; i++) {
+            if (idToMarketToken[i + 1].seller == msg.sender) {
+                items[i] = idToMarketToken[i];
+            }
+        }
+        return items;
     }
 }
