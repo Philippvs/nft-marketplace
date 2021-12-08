@@ -1,4 +1,4 @@
-// SPDX-Licence-Identifier: MIT
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -46,9 +46,9 @@ contract Market is ReentrancyGuard {
     }
 
     function makeMarketItem(
-        uint256 price,
         address nftContract,
-        uint256 tokenId
+        uint256 tokenId,
+        uint256 price
     ) public payable nonReentrant {
         require(price > 0, "Price must be greater than 0");
         require(
@@ -106,7 +106,7 @@ contract Market is ReentrancyGuard {
         payable(owner).transfer(listingPrice);
     }
 
-    function fetchMarketToken() public view returns (MarketToken[] memory) {
+    function fetchMarketTokens() public view returns (MarketToken[] memory) {
         uint256 itemCount = _tokenIds.current();
         uint256 unsoldItemCount = itemCount - _tokensSold.current();
         uint256 currentIndex = 0;
