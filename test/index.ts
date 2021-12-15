@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("market ", function () {
@@ -32,7 +31,20 @@ describe("market ", function () {
     const [_, buyerAddress] = await ethers.getSigners();
     market.connect(buyerAddress).createMarketSale(nftContractAdress, 1, {value: auctionPrice});
 
-    const items = await market.fetchMarketTokens();
+    let items: any[] = await market.fetchMarketTokens();
+
+    items = await Promise.all(items.map(async i=> {
+
+      const tokenURI = await nft.tokenURI(i.tokenId)
+
+      return {
+        price: i.price.toString(),
+        tokenId: i.tokenId.toString(),
+        seller: i.seller,
+        owner: i.owner,
+        tokenURI,
+      }
+    }))
 
     console.log("items ", items);
   
