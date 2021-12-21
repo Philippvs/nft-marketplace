@@ -6,8 +6,6 @@ import ContentContainer from "./components/layout/contentContainer";
 
 
 const Home: NextPage = () => {
-
-
     return (
         <>
             <MainBackground/>
