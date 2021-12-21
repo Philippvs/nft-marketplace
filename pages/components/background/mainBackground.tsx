@@ -4,7 +4,6 @@ import {CardMedia} from "@material-ui/core";
 
 const MainBackground: NextPage = () => {
 
-
     const backgoundStyle: React.CSSProperties = {
         width: "100vw",
         height: "100vh",
@@ -15,6 +14,7 @@ const MainBackground: NextPage = () => {
         top: 0,
         bottom: 0,
         zIndex: -2,
+        filter: "grayscale(80%)",
     }
 
     const overlayStyle: React.CSSProperties = {
@@ -26,7 +26,7 @@ const MainBackground: NextPage = () => {
         left: 0,
         zIndex: -1,
         background: "black",
-        opacity: 0.35,
+        opacity: 0.50,
     }
 
     return <>
